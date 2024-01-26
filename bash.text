@@ -1,0 +1,34 @@
+
+#This file is used to list all folders and generate separate qsub script
+#!/usr/bin/bash
+index=1
+filename=""
+for f in /data/camd/Database/DUDE/DUDE-plus-rev1_AH/*; do
+    filename="qsub"${index}
+    echo $filename
+    if [ -d ${f} ]; then
+        # Will not run if no directories are available        
+	echo "cd ${f}" >> ${filename}
+        echo "cat actives.smi decoys.smi > database.smi" >> ${filename}
+        echo "module load surflex" >> ${filename}
+	echo "sf-tools.exe +reprot fgen3d database.smi library" >> ${filename}
+        echo "sf-tools.exe -pscreen forcegen library.mol2 library" >> ${filename}
+        echo "sf-sim.exe -pscreen -nfinal 1 esim_list library.sfdb ligand.mol2 surflex_result" >> ${filename}
+        cat ${filename}
+        chmod +x ${filename}
+    fi
+    ((index++))
+done
+
+
+#This file is used for genereate qsub for job array
+#!/bin/bash
+#BSUB -J Surflex[1-96]
+#BSUB -e error_%J_%I.err
+#BSUB -o out_%J_%I.out
+#BSUB -q normalQ
+./qsub$LSB_JOBINDEX
+
+
+#To submit
+bsub < qsub.all -P cp-surflex-targetpred
