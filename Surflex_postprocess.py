@@ -1,16 +1,16 @@
 import os
 
-stPath = '/data/camd/Database/DUDE/Test'
+stPath = '/data/camd/Database/DUDE/DUDE-plus-rev1_AH'
 lstFolder = [f.name for f in os.scandir(stPath) if f.is_dir()]
-arTest = []
-arTest.append(lstFolder[0])
-for stDir in arTest:    
+#arTest = []
+#arTest.append(lstFolder[0])
+for stDir in lstFolder:    
     stFile = stPath + "/" + stDir + "/surflex_result-log"    
     print(stFile)
     file = open(stFile, 'r')    
     arContent = file.readlines()
 
-    stOutFile = "/data/camd/Database/DUDE/out/" + stDir
+    stOutFile = "/data/camd/Database/DUDE/out/" + stDir + ".txt"
     print(stOutFile)
     out = open(stOutFile,"+wt") 
 
